@@ -3,7 +3,7 @@
 
 ![Replay](/public/replay_readme.png)
 
-Replay is a web application that allows you to view your screen history & search through it! It's like a time machine for your everything you've ever seen. All processing happens on your browser, so your API Key is always safe. Built with Next.js & [Infr](https://github.com/InfrHQ/server)
+Replay is a web application built that allows you to view your screen history & search through it! It's like a time machine for your everything you've ever seen. All processing happens on your browser, so your API Key is always safe. Built with Next.js & [Infr](https://github.com/InfrHQ/server)
 
 ## Live At [Replay](https://getreplayer.com)
 
