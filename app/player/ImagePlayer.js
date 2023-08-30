@@ -8,7 +8,7 @@ import { telemetry } from '@/utils'
 function ImagePlayer({ queryString }) {
 
     const [imageList, setImageList] = useState([])
-    const [currentIndex, setCurrentIndex] = useState("0")
+    const [currentIndex, setCurrentIndex] = useState(0)
     const [fetchingImages, setFetchingImages] = useState(true)
     const [searchedTime, setSearchedTime] = useState(null)
 
@@ -97,16 +97,16 @@ function ImagePlayer({ queryString }) {
 
             new_segments = [
                 ...beforeSegments,
-                ...searchSegment,
+                first_segment,
                 ...afterSegments,
             ]
-            setCurrentIndex(String(beforeSegments.length))
 
             setOlderOffset((prevOffset) => prevOffset + query_limit)
             setNewerOffset((prevOffset) => prevOffset + query_limit)
+            setCurrentIndex(parseInt(new_segments.indexOf(first_segment)))
         } else {
             new_segments = await fetchData(olderOffset) // Use olderOffset for generic load
-            setCurrentIndex(Srting(new_segments.length - 1))
+            setCurrentIndex(parseInt(new_segments.length - 1))
             setOlderOffset((prevOffset) => prevOffset + query_limit)
             setAllNewerSegmentsFetched(true)
         }
@@ -120,10 +120,11 @@ function ImagePlayer({ queryString }) {
 
     useEffect(() => {
         if (
-            (currentIndex <= 10 && !allOlderSegmentsFetched) ||
-            (imageList.length - currentIndex <= 10 &&
-                !allNewerSegmentsFetched &&
-                !fetchingImages)
+            (
+                ((currentIndex <= 10) && !allOlderSegmentsFetched) ||
+                (((imageList.length - currentIndex) <= 10) && !allNewerSegmentsFetched)
+            ) &&
+                !fetchingImages
         ) {
             fetchMoreImages()
         }
@@ -186,7 +187,7 @@ function ImagePlayer({ queryString }) {
         // Update the current index to reflect the addition of new segments
         if (olderImages.length > 0) {
             const newIndex = olderImages.length + Number(currentIndex)
-            setCurrentIndex(String(newIndex))
+            setCurrentIndex(parseInt(newIndex))
         }
 
         // Update the main state
