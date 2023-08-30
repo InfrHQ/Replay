@@ -33,7 +33,7 @@ function ImagePlayerUI({
             <div className="flex flex-col items-center w-full h-full mt-5">
                 <div className="flex justify-center items-center h-120 w-full relative overflow-hidden">
                     <Image
-                        src={images[displayedIndex]?.image_url}
+                        src={images[displayedIndex]?.screenshot_url}
                         alt={`Image for timestamp: ${images[displayedIndex]?.timestamp}`}
                         objectFit="contain"
                         height={500}
@@ -50,7 +50,7 @@ function ImagePlayerUI({
                         </p>
                     )}
                     <p className="absolute bottom-2 left-2 text-white bg-black bg-opacity-40 px-2 py-1 rounded text-sm mt-2">
-                        {new Date(images[displayedIndex]?.date_created).toLocaleString()}
+                        {new Date(images[displayedIndex]?.date_generated).toLocaleString()}
                     </p>
                     <p className="absolute bottom-12 left-2 text-white bg-black bg-opacity-40 px-2 py-1 rounded text-sm mt-2">
                         {images[displayedIndex]?.name}

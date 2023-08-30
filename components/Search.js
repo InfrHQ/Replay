@@ -1,20 +1,23 @@
-'use client'
+import React, { useState, useRef } from 'react';
 
-// FloatingSearch.js
-import React, { useState } from 'react'
+function FloatingSearch() {
+    const [isOpen, setIsOpen] = useState(false);
+    const textAreaRef = useRef(null); // Reference to keep track of the textarea element
 
-function FloatingSearch({
-    setImageList,
-    setCurrentIndex,
-    setDisplayedIndex,
-    setOffset,
-}) {
-    const [isOpen, setIsOpen] = useState(false)
     function handleOpenClose(spot) {
         if (spot === 'main' && !isOpen) {
-            setIsOpen(true)
+            setIsOpen(true);
         } else if (spot === 'close_tag' && isOpen) {
-            setIsOpen(false)
+            setIsOpen(false);
+        }
+    }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevents the default action of a newline in textarea
+            const queryText = textAreaRef.current.value;
+            const uriEncodedQuery = encodeURIComponent(queryText);
+            window.open(`/player?queryText=${uriEncodedQuery}`, '_blank');
         }
     }
 
@@ -39,16 +42,18 @@ function FloatingSearch({
                     </div>
                     <div className="flex-1 overflow-y-auto p-2">
                         <textarea
+                            ref={textAreaRef}
                             id="message"
                             rows="4"
-                            class="block p-3 w-full text-sm text-slate-300 bg-white-500 rounded-lg border focus:ring-blue-500 dark:bg-slate-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black"
+                            className="block p-3 w-full text-sm text-slate-300 bg-white-500 rounded-lg border focus:ring-blue-500 dark:bg-slate-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black"
                             placeholder="What are you looking for..."
+                            onKeyDown={handleKeyDown}
                         ></textarea>
                     </div>
                 </div>
             ) : null}
         </div>
-    )
+    );
 }
 
-export default FloatingSearch
+export default FloatingSearch;
