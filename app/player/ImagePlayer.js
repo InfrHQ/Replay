@@ -67,7 +67,7 @@ function ImagePlayer({ queryString }) {
         const resp = await fetch(url, options)
         const resp_json = await resp.json()
         const new_segments = resp_json
-        new_segments.reverse()
+        if (queryStringHandler !== 'first') new_segments.reverse()
         setFetchingImages(false)
         return new_segments
     }
