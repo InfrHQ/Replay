@@ -14,13 +14,13 @@ export default function Home() {
         if (serverUrl && apiKey) {
             window.localStorage.setItem('serverUrl', serverUrl)
             window.localStorage.setItem('apiKey', apiKey)
-            telemetry('page__home__redirect_to_player', { serverUrl })
+            telemetry('page__home__redirect_to_player', { server_url:serverUrl })
             window.location.href = '/player'
         }
     }
 
     useEffect(() => {
-        telemetry('pageview__home', { url: window.location.href })
+        telemetry('pageview__home')
     }, [])
 
     return (
