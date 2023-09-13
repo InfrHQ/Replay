@@ -49,6 +49,18 @@ function ImagePlayerUI({
                             History fetch complete
                         </p>
                     )}
+                    {
+                        images[displayedIndex]?.attributes?.page_html_available && (
+                            <a
+                                href={images[displayedIndex]?.page_html_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="absolute bottom-2 right-2 text-white bg-fuchsia-500 bg-opacity-94 px-2 py-1 rounded text-sm mt-2"
+                            >
+                                Relive ⚡
+                            </a>
+                        )
+                    }
                     <p className="absolute bottom-2 left-2 text-white bg-black bg-opacity-40 px-2 py-1 rounded text-sm mt-2">
                         {new Date(images[displayedIndex]?.date_generated).toLocaleString()}
                     </p>

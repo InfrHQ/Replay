@@ -49,7 +49,7 @@ function ImagePlayer({ queryString }) {
         OFFSET ${offset ? offset : 0}
         LIMIT ${query_limit}
         FIELDS id, attributes, name, extracted_text, date_generated
-        MAKE screenshot_url
+        MAKE screenshot_url, page_html_url
         RETURN
         `
         let base_64_query = Buffer.from(IQL_QUERY).toString('base64')
