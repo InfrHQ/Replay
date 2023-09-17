@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 
 function ImagePlayerUI({
     images,
@@ -30,12 +29,11 @@ function ImagePlayerUI({
 
     return (
         <div>
-            <div className="flex flex-col items-center w-full h-full mt-5">
+            <div className="flex flex-col items-center w-full h-full mt-10">
                 <div className="flex justify-center items-center h-120 w-full relative overflow-hidden">
-                    <Image
+                    <img
                         src={images[displayedIndex]?.screenshot_url}
                         alt={`Image for timestamp: ${images[displayedIndex]?.timestamp}`}
-                        objectFit="contain"
                         height={500}
                         width={1000}
                     />

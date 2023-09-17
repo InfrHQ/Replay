@@ -5,7 +5,7 @@ import ImagePlayer from './ImagePlayer'
 import { telemetry } from '@/utils'
 import Header from '@/components/Header'
 import FloatingSearch from '@/components/Search'
-
+import SearchBar from '@/components/SearchBar'
 export default function Home() {
 
     // Get the ?searchText=xyz parameter
@@ -21,8 +21,8 @@ export default function Home() {
     }, [])
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <Header />
+        <main className="flex min-h-screen flex-col items-center justify-between p-10">
+            <SearchBar />
             {!loading && <ImagePlayer queryString={searchText} />}
             <FloatingSearch />
         </main>
