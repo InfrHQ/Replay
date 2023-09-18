@@ -122,7 +122,7 @@ function SearchBar() {
                 } else {
                     setResults([])
                 }
-            }, 400) // 400 ms delay
+            }, 500) // 500 ms delay
         } else {
             setResults([])
         }

@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import ImagePlayer from './ImagePlayer'
 import { telemetry } from '@/utils'
-import Header from '@/components/Header'
-import FloatingSearch from '@/components/Search'
+import Footer from '@/components/Footer'
 import SearchBar from '@/components/SearchBar'
 export default function Home() {
     // Get the ?searchText=xyz parameter
@@ -20,9 +19,12 @@ export default function Home() {
     }, [])
 
     return (
+        <div>
         <main className="flex min-h-screen flex-col items-center justify-between p-10">
             <SearchBar />
             {!loading && <ImagePlayer segment={searchText} />}
         </main>
+            <Footer />
+        </div>
     )
 }

@@ -48,6 +48,8 @@ function ImagePlayer({ segment }) {
                 newSearchedTime +
                 `
             ORDER BY date_generated DESC`
+        } else {
+            IQL_QUERY += `ORDER BY date_generated DESC`
         }
         IQL_QUERY += `
         OFFSET ${offset ? offset : 0}
@@ -71,7 +73,12 @@ function ImagePlayer({ segment }) {
         const resp = await fetch(url, options)
         const resp_json = await resp.json()
         const new_segments = resp_json
-        if (segmentHandler === 'old') new_segments.reverse()
+        if (segmentHandler) {
+            if (segmentHandler === 'old' && segmentHandler)
+                new_segments.reverse()
+        } else {
+            new_segments.reverse()
+        }
         setFetchingImages(false)
         return new_segments
     }
