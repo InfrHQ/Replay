@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
 import DatePicker from 'react-datepicker'
@@ -13,7 +13,7 @@ function SingleCard({ item, isLoading = false }) {
     }
     dateGenerated = dateGenerated.toLocaleString()
 
-    let misc_item =item?.attributes?.window_name
+    let misc_item = item?.attributes?.window_name
     if (item?.attributes?.current_url) {
         misc_item = item?.attributes?.current_url
     }
@@ -24,6 +24,17 @@ function SingleCard({ item, isLoading = false }) {
                 'flex items-center p-4 border-b last:border-b-0 cursor-pointer' +
                 (isLoading ? ' animate-pulse' : '')
             }
+            // Onlick open a new tab /player?segment={base64 encoded segment}
+            onClick={() => {
+                if (!isLoading) {
+                    window.open(
+                        `/player?segment=${Buffer.from(
+                            JSON.stringify(item),
+                        ).toString('base64')}`,
+                        '_blank',
+                    )
+                }
+            }}
         >
             <img
                 src={item?.screenshot_url}
@@ -33,14 +44,10 @@ function SingleCard({ item, isLoading = false }) {
             <div className="flex-grow">
                 <h4 className="text-lg">
                     {item?.attributes?.app_name}{' '}
-                    <span className="text-sm text-gray-500">
-                        {misc_item}
-                    </span>
+                    <span className="text-sm text-gray-500">{misc_item}</span>
                 </h4>
                 <p className="text-sm text-gray-600">{item?.name}</p>
-                <p className="text-xs text-gray-400">
-                    {dateGenerated}
-                </p>
+                <p className="text-xs text-gray-400">{dateGenerated}</p>
             </div>
         </div>
     )
@@ -115,7 +122,7 @@ function SearchBar() {
                 } else {
                     setResults([])
                 }
-            }, 3000) // 300 ms delay
+            }, 400) // 400 ms delay
         } else {
             setResults([])
         }

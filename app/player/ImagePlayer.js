@@ -5,8 +5,7 @@ import ImagePlayerUI from '@/components/ImagePlayerUI'
 import LoadingImagePlayer from '@/components/LoadingImagePlayer'
 import { telemetry } from '@/utils'
 
-function ImagePlayer({ queryString }) {
-
+function ImagePlayer({ segment }) {
     const [imageList, setImageList] = useState([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [fetchingImages, setFetchingImages] = useState(true)
@@ -32,20 +31,25 @@ function ImagePlayer({ queryString }) {
         initialLoad()
     }, [])
 
-    const constructURL = (offset, queryStringHandler, newSearchedTime) => {
+    const constructURL = (offset, segmentHandler, newSearchedTime) => {
         let IQL_QUERY = `
         USE IQLV1.0.0
         FILTER status EQUAL TO 'active'
         `
-        if (queryStringHandler === 'first' && queryString) {
-            IQL_QUERY += `VECTOR SEARCH '${queryString}'`
-        } else if (queryStringHandler === 'new' && queryString) {
-            IQL_QUERY += 'FILTER date_generated GREATER THAN ' + newSearchedTime
-        } else if (queryStringHandler === 'old' && queryString) {
-            IQL_QUERY += 'FILTER date_generated LESS THAN ' + newSearchedTime
+        if (segmentHandler === 'new' && segment) {
+            IQL_QUERY +=
+                `FILTER date_generated GREATER THAN ` +
+                newSearchedTime +
+                `
+            ORDER BY date_generated ASC`
+        } else if (segmentHandler === 'old' && segment) {
+            IQL_QUERY +=
+                `FILTER date_generated LESS THAN ` +
+                newSearchedTime +
+                `
+            ORDER BY date_generated DESC`
         }
         IQL_QUERY += `
-        ORDER BY date_generated DESC
         OFFSET ${offset ? offset : 0}
         LIMIT ${query_limit}
         FIELDS id, attributes, name, extracted_text, date_generated
@@ -56,9 +60,9 @@ function ImagePlayer({ queryString }) {
         return `${serverUrl.current}/v1/segment/query?query=${base_64_query}`
     }
 
-    async function fetchData(offset, queryStringHandler, searchTime) {
+    async function fetchData(offset, segmentHandler, searchTime) {
         setFetchingImages(true)
-        const url = constructURL(offset, queryStringHandler, searchTime)
+        const url = constructURL(offset, segmentHandler, searchTime)
         const options = {
             headers: {
                 'Infr-API-Key': apiKey.current,
@@ -67,7 +71,7 @@ function ImagePlayer({ queryString }) {
         const resp = await fetch(url, options)
         const resp_json = await resp.json()
         const new_segments = resp_json
-        if (queryStringHandler !== 'first') new_segments.reverse()
+        if (segmentHandler === 'old') new_segments.reverse()
         setFetchingImages(false)
         return new_segments
     }
@@ -75,10 +79,11 @@ function ImagePlayer({ queryString }) {
     async function initialLoad() {
         let new_segments = []
 
-        if (queryString) {
-            const searchSegment = await fetchData(0, 'first') // Corrected argument
-
-            let first_segment = searchSegment[0]
+        if (segment) {
+            // Load segment as Base64
+            let first_segment = JSON.parse(
+                Buffer.from(segment, 'base64').toString(),
+            )
 
             let newSearchedTime = Math.floor(
                 new Date(first_segment?.date_generated).getTime() / 1000,
@@ -95,11 +100,7 @@ function ImagePlayer({ queryString }) {
                 newSearchedTime,
             )
 
-            new_segments = [
-                ...beforeSegments,
-                first_segment,
-                ...afterSegments,
-            ]
+            new_segments = [...beforeSegments, first_segment, ...afterSegments]
 
             setOlderOffset((prevOffset) => prevOffset + query_limit)
             setNewerOffset((prevOffset) => prevOffset + query_limit)
@@ -120,11 +121,10 @@ function ImagePlayer({ queryString }) {
 
     useEffect(() => {
         if (
-            (
-                ((currentIndex <= 10) && !allOlderSegmentsFetched) ||
-                (((imageList.length - currentIndex) <= 10) && !allNewerSegmentsFetched)
-            ) &&
-                !fetchingImages
+            ((currentIndex <= 10 && !allOlderSegmentsFetched) ||
+                (imageList.length - currentIndex <= 10 &&
+                    !allNewerSegmentsFetched)) &&
+            !fetchingImages
         ) {
             fetchMoreImages()
         }
@@ -141,7 +141,7 @@ function ImagePlayer({ queryString }) {
 
         // Fetch older images if the current index is near the start of the list
         if (currentIndex <= 10 && !allOlderSegmentsFetched) {
-            if (queryString) {
+            if (segment) {
                 olderImages = await fetchData(olderOffset, 'old', searchedTime)
             } else {
                 olderImages = await fetchData(olderOffset, 'old')
@@ -159,7 +159,7 @@ function ImagePlayer({ queryString }) {
             imageList.length - currentIndex <= 10 &&
             !allNewerSegmentsFetched
         ) {
-            if (queryString) {
+            if (segment) {
                 newerImages = await fetchData(newerOffset, 'new', searchedTime)
             } else {
                 newerImages = await fetchData(newerOffset, 'new')
