@@ -28,7 +28,7 @@ function SingleCard({ item, isLoading = false }) {
             onClick={() => {
                 if (!isLoading) {
                     window.open(
-                        `/player?segment=${Buffer.from(
+                        `/dashboard/player?segment=${Buffer.from(
                             JSON.stringify(item),
                         ).toString('base64')}`,
                         '_blank',

@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import ImagePlayer from './ImagePlayer'
 import { telemetry } from '@/utils'
-import Footer from '@/components/Footer'
 import SearchBar from '@/components/SearchBar'
-export default function Home() {
+
+import DashboardLayout from '@/components/DashboardLayout'
+
+function Home() {
     // Get the ?searchText=xyz parameter
     const [searchText, setSearchText] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -24,7 +26,14 @@ export default function Home() {
             <SearchBar />
             {!loading && <ImagePlayer segment={searchText} />}
         </main>
-            <Footer />
+            
         </div>
+    )
+}
+
+
+export default function DashboardHome() {
+    return (
+        <DashboardLayout Component={Home} />
     )
 }
