@@ -22,8 +22,18 @@ export default function Home() {
         }
     }
 
+    function handlePageLoad() {
+        let tempServerUrl = window.localStorage.getItem('serverUrl')
+        let tempApiKey = window.localStorage.getItem('apiKey')
+
+        if (tempServerUrl && tempApiKey) {
+            window.location.href = '/dashboard/player'
+        }
+    }
+
     useEffect(() => {
         telemetry('pageview__home')
+        handlePageLoad()
     }, [])
 
     return (
