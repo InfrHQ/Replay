@@ -22,18 +22,14 @@ function Home() {
 
     return (
         <div>
-        <main className="flex min-h-screen flex-col items-center justify-between p-10">
-            <SearchBar />
-            {!loading && <ImagePlayer segment={searchText} />}
-        </main>
-            
+            <main className="flex min-h-screen flex-col items-center justify-between p-10">
+                <SearchBar />
+                {!loading && <ImagePlayer segment={searchText} />}
+            </main>
         </div>
     )
 }
 
-
 export default function DashboardHome() {
-    return (
-        <DashboardLayout Component={Home} />
-    )
+    return <DashboardLayout Component={Home} />
 }
